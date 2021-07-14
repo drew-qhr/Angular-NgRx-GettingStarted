@@ -1,11 +1,60 @@
-import { createAction, createReducer, on } from '@ngrx/store';
+import { createAction, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import * as ProductActions from './product.actions';
+import { ProductState } from './product.state';
 
-export const productReducer = createReducer(
-  { showProductCode: true },
-  on(createAction('[Product] Toggle Prodcut Code'), (state) => {
+const initialState: ProductState = {
+  showProductCode: true,
+  currentProduct: null,
+  products: []
+};
+
+const getProductFeatureState = createFeatureSelector<ProductState>('products');
+
+export const getShowProductCode = createSelector(
+  getProductFeatureState,
+  state => state.showProductCode
+);
+
+export const getCurrentProduct = createSelector(
+  getProductFeatureState,
+  state => state.currentProduct
+);
+
+export const getProducts = createSelector(
+  getProductFeatureState,
+  state => state.products
+);
+
+export const productReducer = createReducer<ProductState>(
+  initialState,
+  on(ProductActions.toggleProductCode, (state): ProductState => {
     return {
       ...state,
-      showProductCode: !state.showProductCode,
+      showProductCode: !state.showProductCode
+    };
+  }),
+  on(ProductActions.setCurrentProduct, (state, action): ProductState => {
+    return {
+      ...state,
+      currentProduct: action.product
+    };
+  }),
+  on(ProductActions.clearCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: null
+    };
+  }),
+  on(ProductActions.initializeCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: {
+        id: 0,
+        productName: '',
+        productCode: 'New',
+        description: '',
+        starRating: 0
+      }
     };
   })
 );
