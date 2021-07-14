@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { AuthService } from './auth.service';
 import { getMaskUserName } from './state/user.reducer';
@@ -14,7 +15,7 @@ import * as UserActions from './state/user.actions';
 export class LoginComponent implements OnInit {
   pageTitle = 'Log In';
 
-  maskUserName: boolean;
+  maskUserName$: Observable<boolean>;
 
   constructor(
     private store: Store<any>,
@@ -23,10 +24,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.select(getMaskUserName).subscribe(
-      maskUserName => this.maskUserName = maskUserName
-    );
+    this.maskUserName$ = this.store.select(getMaskUserName);
   }
 
   cancel(): void {
