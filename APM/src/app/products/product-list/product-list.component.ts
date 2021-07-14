@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
-import { getShowProductCode } from '../state/product.reducer';
+import { getCurrentProduct, getShowProductCode } from '../state/product.reducer';
 import { State } from '../state/product.state';
 import * as ProductActions from '../state/product.actions';
 
@@ -15,7 +15,7 @@ import * as ProductActions from '../state/product.actions';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit, OnDestroy {
+export class ProductListComponent implements OnInit {
   pageTitle = 'Products';
   errorMessage: string;
 
@@ -25,7 +25,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   // Used to highlight the selected product in the list
   selectedProduct: Product | null;
-  sub: Subscription;
 
   constructor(
     private store: Store<State>,
@@ -33,7 +32,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.productService.selectedProductChanges$.subscribe(
+    // TODO: Unsubscribe
+    this.store.select(getCurrentProduct).subscribe(
       currentProduct => this.selectedProduct = currentProduct
     );
 
@@ -47,10 +47,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.store.select(getShowProductCode).subscribe(
       showProductCode => this.displayCode = showProductCode
     );
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
   }
 
   checkChanged(): void {

@@ -70,6 +70,7 @@ export class ProductEditComponent implements OnInit {
       currentProduct => this.displayProduct(currentProduct)
     );
 
+    // TODO: Unsubscribe
     // Watch for value changes for validation
     this.productForm.valueChanges.subscribe(
       () => this.displayMessage = this.genericValidator.processMessages(this.productForm)
@@ -123,7 +124,7 @@ export class ProductEditComponent implements OnInit {
       }
     } else {
       // No need to delete, it was never saved
-      this.productService.changeSelectedProduct(null);
+      this.store.dispatch(ProductActions.clearCurrentProduct());
     }
   }
 
