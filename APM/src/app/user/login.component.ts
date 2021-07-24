@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { AuthService } from './auth.service';
 import { getMaskUserName } from './state/user.reducer';
-import * as UserActions from './state/user.actions';
+import * as UserActions from './state/actions/user-page.actions';
 
 @Component({
   templateUrl: './login.component.html',
